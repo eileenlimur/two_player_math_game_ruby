@@ -1,5 +1,4 @@
 require "./question"
-require "./enter_module.rb"
 
 class Game
   def initialize(player1, player2)
@@ -10,23 +9,27 @@ class Game
   end
 
   def start
-    print "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife. Press enter."
-    include Enter do
+    puts "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife."
+    press_enter do
       while !self.end_game?
         one_round
       end
     end
-    # input = $stdin.gets.chomp
-    # if input
-    #   while !self.end_game?
-    #     one_round
-    #   end
-    # end
     self.who_lost
     puts "#{@loser.name} lost. Await the sweet kiss of mathematical death."
   end
 
   protected
+
+  def press_enter
+    print "Press Enter"
+    input = $stdin.gets.chomp
+
+    if input
+      yield
+    end
+
+  end
 
   def score
     "#{@player1.name}: #{@player1.lives} vs #{@player2.name}: #{@player2.lives}"
@@ -49,23 +52,23 @@ class Game
   end
 
   def one_round
-    print "#{@current_player.name} is up. Press enter."
+    puts "#{@current_player.name} is up."
 
-    input = $stdin.gets.chomp
-    
-    if input
+    press_enter do
+
       question = Question.new
       puts question.question
       answer = $stdin.gets.chomp
 
       if question.answer_check(answer.to_i)
-        puts"Correct, #{@current_player.name}. You survive, for now. "
+        puts "Correct, #{@current_player.name}. You survive, for now. "
       else
         puts "NO! NO! NO! NO! NO! NO! The correct answer was #{question.answer} all along. "
         @current_player.lose_game
       end
-
+      
       puts "Current score: " + self.score + "."
+      press_enter do "" end
     end
 
     self.toggle_player
