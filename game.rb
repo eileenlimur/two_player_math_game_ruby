@@ -1,7 +1,7 @@
 class Game
   attr_accessor :player1, :player2, :current_player, :loser
   
-  def initialize # what's the difference between setting something using a setter method vs. directly doing @variable = value?
+  def initialize 
     @player1 = ""
     @player2 = ""
     @current_player = ""
@@ -10,6 +10,11 @@ class Game
   end
 
   def start
+
+    Signal.trap("INT") {
+      puts "You quit. I guess that's fine too."
+      exit
+    }
 
     puts "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife."
     
@@ -34,7 +39,7 @@ class Game
 
   protected
 
-  def press_enter # was this the best way to do this?
+  def press_enter
     print "Press Enter"
     input = $stdin.gets.chomp
 
