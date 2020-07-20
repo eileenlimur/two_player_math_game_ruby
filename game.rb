@@ -117,7 +117,7 @@ class Game
     Signal.trap("INT") {
       puts "You quit. I guess that's fine too."
       exit
-    } # this seems to work sometimes but not always
+    }
 
   end
 end
