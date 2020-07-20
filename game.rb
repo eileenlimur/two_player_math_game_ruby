@@ -10,13 +10,18 @@ class Game
   end
 
   def start
-    print "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife. Press enter."    
-    input = $stdin.gets.chomp
-    if input
+    print "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife. Press enter."
+    include Enter do
       while !self.end_game?
         one_round
       end
     end
+    # input = $stdin.gets.chomp
+    # if input
+    #   while !self.end_game?
+    #     one_round
+    #   end
+    # end
     self.who_lost
     puts "#{@loser.name} lost. Await the sweet kiss of mathematical death."
   end
