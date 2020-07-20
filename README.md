@@ -1,0 +1,1 @@
+This is two-person Ruby-based math game (very easy math) that is played in the command line.
