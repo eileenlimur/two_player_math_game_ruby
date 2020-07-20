@@ -1,27 +1,40 @@
-require "./question"
-
 class Game
-  def initialize(player1, player2)
-    @player1 = player1
-    @player2 = player2
-    @current_player = @player1 #what is getting stored in current_player? Seems like we are able to call @player1's instance methods on current_player
+  attr_accessor :player1, :player2, :current_player, :loser
+  
+  def initialize # what's the difference between setting something using a setter method vs. directly doing @variable = value?
+    @player1 = ""
+    @player2 = ""
+    @current_player = ""
     @loser = ""
+    @round = 1
   end
 
   def start
+
     puts "Welcome to the mathematics death match. Loser gets a shortcut to the mathterlife."
+    
     press_enter do
-      while !self.end_game?
+      set_players
+    end
+    
+    puts "#{@player1.name} and #{@player2.name}, let's begin."
+
+    press_enter do
+      while !end_game?
         one_round
       end
     end
-    self.who_lost
+    
+    who_lost
+
     puts "#{@loser.name} lost. Await the sweet kiss of mathematical death."
+    puts "----- GAME OVER -----"
+
   end
 
   protected
 
-  def press_enter
+  def press_enter # was this the best way to do this?
     print "Press Enter"
     input = $stdin.gets.chomp
 
@@ -32,7 +45,23 @@ class Game
   end
 
   def score
-    "#{@player1.name}: #{@player1.lives} vs #{@player2.name}: #{@player2.lives}"
+    "Lives remaining - #{@player1.name}: #{@player1.lives}, #{@player2.name}: #{@player2.lives}"
+  end
+
+  def set_players
+    puts "What is player 1's name?"
+    print ">"
+    p1 = $stdin.gets.chomp
+
+    @player1 = Player.new(p1)
+
+    puts "What is player 2's name?"
+    print ">"
+    p2 = $stdin.gets.chomp
+
+    @player2 = Player.new(p2)
+
+    self.current_player = @player1
   end
 
   def toggle_player
@@ -52,12 +81,17 @@ class Game
   end
 
   def one_round
+    if @round != 1
+      puts "----- NEW TURN ----"
+    end
+
     puts "#{@current_player.name} is up."
 
     press_enter do
 
       question = Question.new
       puts question.question
+      print ">"
       answer = $stdin.gets.chomp
 
       if question.answer_check(answer.to_i)
@@ -67,11 +101,19 @@ class Game
         @current_player.lose_game
       end
       
-      puts "Current score: " + self.score + "."
+      puts self.score
       press_enter do "" end
     end
 
     self.toggle_player
+
+    @round += 0.5
+
+    Signal.trap("INT") {
+      puts "You quit. I guess that's fine too."
+      exit
+    } # this seems to work sometimes but not always
+
   end
 end
 
