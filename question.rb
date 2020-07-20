@@ -6,7 +6,7 @@ class Question
     @question = "#{@num1} + #{@num2} = ?"
   end
   
-  attr_reader :question
+  attr_reader :question, :answer
 
   def answer_check(given_answer)
     @answer == given_answer

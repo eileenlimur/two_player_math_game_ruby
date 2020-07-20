@@ -4,7 +4,7 @@ class Player
     @lives = 3
   end
 
-  attr_reader :lives
+  attr_reader :lives, :name
 
   def lose_game
     @lives -= 1
